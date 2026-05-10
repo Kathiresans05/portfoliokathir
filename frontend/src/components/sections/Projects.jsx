@@ -91,8 +91,8 @@ const Projects = () => {
       <div className="max-w-7xl mx-auto space-y-12 md:space-y-16">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2 md:space-y-4">
-            <h3 className="text-cyber-primary font-mono text-sm tracking-widest uppercase">04 // PORTFOLIO</h3>
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-white">Recent <span className="text-cyber-secondary">Creations</span></h2>
+
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-white">Recent <span className="text-cyber-secondary">Projects</span></h2>
           </div>
           <div className="pb-2">
             <a href="#" className="text-white/60 hover:text-cyber-primary font-mono text-xs md:text-sm tracking-widest transition-colors flex items-center gap-2">

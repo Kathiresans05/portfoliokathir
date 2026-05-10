@@ -74,24 +74,17 @@ const Pricing = () => {
   }, []);
 
   return (
-    <section id="pricing" className="min-h-screen section-padding bg-[#020205] relative">
+    <section id="pricing" className="min-h-screen section-padding bg-transparent relative">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col items-center text-center mb-16 md:mb-24 space-y-4">
-          <motion.h3 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            className="text-cyber-secondary font-mono text-sm tracking-[0.3em] uppercase"
-          >
-            05 // SERVICE_PLANS
-          </motion.h3>
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             className="text-4xl md:text-7xl font-bold text-white tracking-tight"
           >
-            Flexible <span className="text-cyber-primary">Investment</span>
+            Service <span className="text-cyber-primary">Plans</span>
           </motion.h2>
-          <p className="text-white/40 max-w-2xl font-mono text-xs md:text-sm uppercase tracking-widest"> Transparent pricing models tailored for high-impact digital products. </p>
+          <p className="text-white/40 max-w-2xl font-mono text-xs md:text-sm uppercase tracking-widest"> Transparent pricing for all types of web development projects. </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

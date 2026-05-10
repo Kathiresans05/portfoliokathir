@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
-const { Project, Skill, Pricing, Message } = require('./models');
+const { Project, Skill, Pricing, Message, Settings } = require('./models');
 
 const app = express();
 app.use(cors());
@@ -41,6 +41,10 @@ app.delete('/api/projects/:id', async (req, res) => {
   await Project.findByIdAndDelete(req.params.id);
   res.json({ success: true });
 });
+app.put('/api/projects/:id', async (req, res) => {
+  const project = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  res.json(project);
+});
 
 // --- Skills ---
 app.get('/api/skills', async (req, res) => {
@@ -55,6 +59,10 @@ app.post('/api/skills', async (req, res) => {
 app.delete('/api/skills/:id', async (req, res) => {
   await Skill.findByIdAndDelete(req.params.id);
   res.json({ success: true });
+});
+app.put('/api/skills/:id', async (req, res) => {
+  const skill = await Skill.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  res.json(skill);
 });
 
 // --- Pricing ---
@@ -90,6 +98,21 @@ app.post('/api/messages', async (req, res) => {
 app.delete('/api/messages/:id', async (req, res) => {
   await Message.findByIdAndDelete(req.params.id);
   res.json({ success: true });
+});
+
+// --- Settings ---
+app.get('/api/settings/:key', async (req, res) => {
+  const setting = await Settings.findOne({ key: req.params.key });
+  res.json(setting || { value: '' });
+});
+app.post('/api/settings', async (req, res) => {
+  const { key, value } = req.body;
+  const setting = await Settings.findOneAndUpdate(
+    { key },
+    { value },
+    { upsert: true, new: true }
+  );
+  res.json(setting);
 });
 
 // --- Cloudinary Upload ---

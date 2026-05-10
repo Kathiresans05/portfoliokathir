@@ -43,14 +43,13 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="min-h-screen section-padding bg-[#020205] relative flex items-center justify-center">
+    <section id="contact" className="min-h-screen section-padding bg-transparent relative flex items-center justify-center">
       <div className="max-w-6xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 relative z-10">
         
         {/* Contact Info */}
         <div className="space-y-12">
           <div className="space-y-4">
-            <h3 className="text-cyber-primary font-mono text-sm tracking-[0.3em] uppercase">06 // CONNECT</h3>
-            <h2 className="text-5xl md:text-8xl font-black text-white tracking-tighter">Let's <br/> <span className="text-white/20">Collaborate</span></h2>
+            <h2 className="text-5xl md:text-8xl font-black text-white tracking-tighter">Get In <br/> <span className="text-white/20">Touch</span></h2>
           </div>
 
           <div className="space-y-8">
@@ -59,7 +58,7 @@ const Contact = () => {
                 <Mail size={24} />
               </div>
               <div>
-                <p className="text-white/30 text-[10px] font-mono uppercase tracking-[0.2em] mb-1">Electronic Mail</p>
+                <p className="text-white/30 text-[10px] font-mono uppercase tracking-[0.2em] mb-1">Email Me</p>
                 <p className="text-white font-bold text-lg">hello@kathiresan.dev</p>
               </div>
             </div>
@@ -69,7 +68,7 @@ const Contact = () => {
                 <MapPin size={24} />
               </div>
               <div>
-                <p className="text-white/30 text-[10px] font-mono uppercase tracking-[0.2em] mb-1">Operational Base</p>
+                <p className="text-white/30 text-[10px] font-mono uppercase tracking-[0.2em] mb-1">Location</p>
                 <p className="text-white font-bold text-lg">Bengaluru, India</p>
               </div>
             </div>
@@ -91,8 +90,8 @@ const Contact = () => {
                   <CheckCircle size={48} />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-white mb-2">Transmission Received</h3>
-                  <p className="text-white/50 text-sm font-mono uppercase tracking-widest leading-relaxed">System has logged your request. <br/> A response will be generated shortly.</p>
+                  <h3 className="text-2xl font-bold text-white mb-2">Message Sent!</h3>
+                  <p className="text-white/50 text-sm font-mono uppercase tracking-widest leading-relaxed">Thank you for your message. <br/> I will get back to you very soon.</p>
                 </div>
                 <button 
                   onClick={() => setIsSubmitted(false)}
@@ -105,18 +104,18 @@ const Contact = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-white/30 text-[10px] font-mono uppercase tracking-[0.2em] ml-2">Name_</label>
+                    <label className="text-white/30 text-[10px] font-mono uppercase tracking-[0.2em] ml-2">Name</label>
                     <input 
                       type="text" 
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
                       className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white focus:outline-none focus:border-cyber-primary transition-colors"
-                      placeholder="Ident Name"
+                      placeholder="Your Name"
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-white/30 text-[10px] font-mono uppercase tracking-[0.2em] ml-2">Email_</label>
+                    <label className="text-white/30 text-[10px] font-mono uppercase tracking-[0.2em] ml-2">Email</label>
                     <input 
                       type="email" 
                       required
@@ -136,7 +135,7 @@ const Contact = () => {
                     value={formData.subject}
                     onChange={(e) => setFormData({...formData, subject: e.target.value})}
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white focus:outline-none focus:border-cyber-primary transition-colors"
-                    placeholder="Inquiry Type"
+                    placeholder="Message Subject"
                   />
                 </div>
 
@@ -148,7 +147,7 @@ const Contact = () => {
                     value={formData.message}
                     onChange={(e) => setFormData({...formData, message: e.target.value})}
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white focus:outline-none focus:border-cyber-primary transition-colors resize-none"
-                    placeholder="Input detailed brief..."
+                    placeholder="Tell me about your project..."
                   />
                 </div>
 
@@ -157,7 +156,7 @@ const Contact = () => {
                   disabled={isLoading}
                   className="w-full bg-cyber-primary text-black font-black py-5 rounded-xl uppercase tracking-[0.3em] flex items-center justify-center gap-3 hover:shadow-[0_0_30px_rgba(0,243,255,0.4)] transition-all active:scale-[0.98] disabled:opacity-50"
                 >
-                  {isLoading ? 'Processing...' : 'Initialize Transmission'}
+                  {isLoading ? 'Sending...' : 'Send Message'}
                   <Send size={18} />
                 </button>
               </form>

@@ -31,9 +31,15 @@ const messageSchema = new mongoose.Schema({
   date: String
 }, { timestamps: true });
 
+const settingsSchema = new mongoose.Schema({
+  key: { type: String, unique: true },
+  value: String
+});
+
 module.exports = {
   Project: mongoose.model('Project', projectSchema),
   Skill: mongoose.model('Skill', skillSchema),
   Pricing: mongoose.model('Pricing', pricingSchema),
-  Message: mongoose.model('Message', messageSchema)
+  Message: mongoose.model('Message', messageSchema),
+  Settings: mongoose.model('Settings', settingsSchema)
 };

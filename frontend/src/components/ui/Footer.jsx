@@ -42,9 +42,12 @@ const Footer = () => {
           
           {/* Brand Info */}
           <div className="md:col-span-2 space-y-6">
-            <Link to="/" className="inline-flex items-center gap-2">
-              <span className="text-2xl font-black tracking-tighter text-white">KATHIRESAN</span>
-              <span className="text-cyber-primary text-2xl font-black">.</span>
+            <Link to="/" className="inline-flex items-center gap-3">
+              <img src="/logo1.png" alt="Logo" className="w-10 h-10 object-contain" />
+              <div className="flex items-center gap-1">
+                <span className="text-2xl font-black tracking-tighter text-white">KATHIRESAN</span>
+                <span className="text-cyber-primary text-2xl font-black">.</span>
+              </div>
             </Link>
             <p className="text-white/50 text-sm max-w-sm leading-relaxed">
               Full Stack MERN Engineer architecting premium, high-performance web applications and cinematic digital experiences.

@@ -27,6 +27,8 @@ const Admin = () => {
   const [isUploadingAbout, setIsUploadingAbout] = useState(false);
 
   const [editingPricingId, setEditingPricingId] = useState(null);
+  const [editingProjectId, setEditingProjectId] = useState(null);
+  const [editingSkillId, setEditingSkillId] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -53,17 +55,27 @@ const Admin = () => {
       setPricing(priceData);
       setMessages(msgData);
       
-      // For about image, we'll keep using localStorage for now as a simple setting 
-      // or we could add a dedicated settings API. Let's keep it in localStorage for simplicity unless requested.
-      setAboutImage(localStorage.getItem('portfolio_about_img') || '');
+      // Fetch About Image from DB
+      const settingRes = await fetch(`${API_BASE}/settings/portfolio_about_img`);
+      const settingData = await settingRes.json();
+      setAboutImage(settingData.value || '');
     } catch (err) {
       console.error("Error fetching data:", err);
     }
   };
 
-  const handleSaveAbout = () => {
-    localStorage.setItem('portfolio_about_img', aboutImage);
-    alert('About image saved!');
+  const handleSaveAbout = async () => {
+    try {
+      await fetch(`${API_BASE}/settings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: 'portfolio_about_img', value: aboutImage })
+      });
+      alert('About image saved to database!');
+    } catch (err) {
+      console.error(err);
+      alert('Save failed');
+    }
   };
 
   const uploadToBackend = async (file, setUrlState, setLoadingState) => {
@@ -93,50 +105,103 @@ const Admin = () => {
   const handleAddProject = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`${API_BASE}/projects`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newProject)
-      });
-      const saved = await res.json();
-      setProjects([saved, ...projects]);
+      if (editingProjectId) {
+        const res = await fetch(`${API_BASE}/projects/${editingProjectId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newProject)
+        });
+        const updated = await res.json();
+        setProjects(projects.map(p => p._id === editingProjectId ? updated : p));
+        setEditingProjectId(null);
+        alert('Project updated successfully!');
+      } else {
+        const res = await fetch(`${API_BASE}/projects`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newProject)
+        });
+        const saved = await res.json();
+        setProjects([saved, ...projects]);
+        alert('Project added successfully!');
+      }
       setNewProject({ title: '', description: '', thumbnail: '', videoUrl: '', githubUrl: '', liveUrl: '' });
     } catch (err) {
       console.error(err);
+      alert('Failed to save project');
     }
   };
 
+  const handleEditProject = (project) => {
+    setEditingProjectId(project._id);
+    setNewProject({
+      title: project.title,
+      description: project.description,
+      thumbnail: project.thumbnail,
+      videoUrl: project.videoUrl,
+      githubUrl: project.githubUrl,
+      liveUrl: project.liveUrl
+    });
+    // Scroll to top of form
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleDeleteProject = async (id) => {
+    if (!confirm('Are you sure you want to delete this project?')) return;
     try {
       await fetch(`${API_BASE}/projects/${id}`, { method: 'DELETE' });
       setProjects(projects.filter(p => p._id !== id));
+      alert('Project deleted');
     } catch (err) {
       console.error(err);
+      alert('Delete failed');
     }
   };
 
   const handleAddSkill = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`${API_BASE}/skills`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newSkill)
-      });
-      const saved = await res.json();
-      setSkills([...skills, saved]);
+      if (editingSkillId) {
+        const res = await fetch(`${API_BASE}/skills/${editingSkillId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newSkill)
+        });
+        const updated = await res.json();
+        setSkills(skills.map(s => s._id === editingSkillId ? updated : s));
+        setEditingSkillId(null);
+        alert('Skill updated!');
+      } else {
+        const res = await fetch(`${API_BASE}/skills`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newSkill)
+        });
+        const saved = await res.json();
+        setSkills([...skills, saved]);
+        alert('Skill added!');
+      }
       setNewSkill({ name: '', icon: 'Code' });
     } catch (err) {
       console.error(err);
+      alert('Failed to save skill');
     }
   };
 
+  const handleEditSkill = (skill) => {
+    setEditingSkillId(skill._id);
+    setNewSkill({ name: skill.name, icon: skill.icon });
+  };
+
   const handleDeleteSkill = async (id) => {
+    if (!confirm('Delete this skill?')) return;
     try {
       await fetch(`${API_BASE}/skills/${id}`, { method: 'DELETE' });
       setSkills(skills.filter(s => s._id !== id));
+      alert('Skill deleted');
     } catch (err) {
       console.error(err);
+      alert('Delete failed');
     }
   };
 
@@ -158,6 +223,7 @@ const Admin = () => {
         const updated = await res.json();
         setPricing(pricing.map(p => p._id === editingPricingId ? updated : p));
         setEditingPricingId(null);
+        alert('Pricing plan updated!');
       } else {
         const res = await fetch(`${API_BASE}/pricing`, {
           method: 'POST',
@@ -166,10 +232,12 @@ const Admin = () => {
         });
         const saved = await res.json();
         setPricing([...pricing, saved]);
+        alert('Pricing plan added!');
       }
       setNewPricing({ title: '', price: '', currency: '$', description: '', features: '', isPopular: false });
     } catch (err) {
       console.error(err);
+      alert('Failed to save pricing');
     }
   };
 
@@ -183,40 +251,51 @@ const Admin = () => {
       isPopular: plan.isPopular,
       currency: plan.currency || '$'
     });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDeletePricing = async (id) => {
+    if (!confirm('Delete this pricing plan?')) return;
     try {
       await fetch(`${API_BASE}/pricing/${id}`, { method: 'DELETE' });
       setPricing(pricing.filter(p => p._id !== id));
+      alert('Pricing plan deleted');
     } catch (err) {
       console.error(err);
+      alert('Delete failed');
     }
   };
 
   const handleDeleteMessage = async (id) => {
+    if (!confirm('Delete this message?')) return;
     try {
       await fetch(`${API_BASE}/messages/${id}`, { method: 'DELETE' });
       setMessages(messages.filter(m => m._id !== id));
+      alert('Message deleted');
     } catch (err) {
       console.error(err);
+      alert('Delete failed');
     }
   };
 
   const tabs = [
-    { id: 'projects', icon: FolderOpen, label: 'Projects & Gallery' },
-    { id: 'about', icon: Image, label: 'About Image' },
-    { id: 'skills', icon: Code, label: 'Skills' },
-    { id: 'pricing', icon: DollarSign, label: 'Pricing' },
-    { id: 'messages', icon: MessageSquare, label: 'Messages' },
+    { id: 'projects', icon: FolderOpen, label: 'My Portfolio' },
+    { id: 'about', icon: Image, label: 'Profile Photo' },
+    { id: 'skills', icon: Code, label: 'My Skills' },
+    { id: 'pricing', icon: DollarSign, label: 'Service Plans' },
+    { id: 'messages', icon: MessageSquare, label: 'Client Messages' },
   ];
 
   return (
     <section className="min-h-screen pt-24 pb-20 px-6 max-w-7xl mx-auto flex flex-col md:flex-row gap-8">
       {/* Sidebar */}
       <div className="w-full md:w-64 shrink-0 space-y-2">
-        <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2 px-4">
-          <Settings className="text-cyber-primary" /> Admin Panel
+        <h2 className="text-2xl font-bold text-white mb-6 flex flex-col gap-1 px-4">
+          <div className="flex items-center gap-2">
+            <Settings className="text-cyber-primary" /> 
+            <span>Dashboard</span>
+          </div>
+          <span className="text-[10px] text-white/40 font-mono uppercase tracking-widest">Manage Your Site</span>
         </h2>
         {tabs.map((tab) => {
           const Icon = tab.icon;
@@ -244,9 +323,13 @@ const Admin = () => {
           {/* PROJECTS TAB */}
           {activeTab === 'projects' && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-8">
-              <h3 className="text-2xl font-bold text-white border-b border-white/10 pb-4">Manage Projects & Gallery</h3>
+              <div className="border-b border-white/10 pb-4">
+                <h3 className="text-2xl font-bold text-white">My Portfolio</h3>
+                <p className="text-white/40 text-sm mt-1">Add or edit projects that show up on your main website.</p>
+              </div>
               
               <form onSubmit={handleAddProject} className="space-y-4 bg-black/30 p-6 rounded-2xl border border-white/5">
+                <p className="text-cyber-primary text-xs font-mono uppercase tracking-wider mb-2">Project Details</p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <input type="text" required placeholder="Project Title" value={newProject.title} onChange={e => setNewProject({...newProject, title: e.target.value})} className="bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-white" />
                   
@@ -272,7 +355,16 @@ const Admin = () => {
                   <input type="url" placeholder="Live Host Link" value={newProject.liveUrl} onChange={e => setNewProject({...newProject, liveUrl: e.target.value})} className="col-span-2 md:col-span-1 bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-white" />
                 </div>
                 <textarea required placeholder="Project Description" value={newProject.description} onChange={e => setNewProject({...newProject, description: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-white h-20" />
-                <button type="submit" className="px-6 py-2 bg-cyber-primary text-black font-bold rounded-lg hover:shadow-[0_0_15px_rgba(0,243,255,0.4)] flex items-center gap-2"><Plus size={18} /> Add Project</button>
+                <div className="flex gap-4">
+                  <button type="submit" className="px-6 py-2 bg-cyber-primary text-black font-bold rounded-lg hover:shadow-[0_0_15px_rgba(0,243,255,0.4)] flex items-center gap-2">
+                    {editingProjectId ? <><Save size={18} /> Update Project</> : <><Plus size={18} /> Add Project</>}
+                  </button>
+                  {editingProjectId && (
+                    <button type="button" onClick={() => { setEditingProjectId(null); setNewProject({ title: '', description: '', thumbnail: '', videoUrl: '', githubUrl: '', liveUrl: '' }); }} className="px-6 py-2 bg-white/10 text-white font-bold rounded-lg hover:bg-white/20">
+                      Cancel
+                    </button>
+                  )}
+                </div>
               </form>
 
               <div className="space-y-4">
@@ -285,7 +377,10 @@ const Admin = () => {
                         <p className="text-xs text-white/40 max-w-sm truncate">{p.description}</p>
                       </div>
                     </div>
-                    <button onClick={() => handleDeleteProject(p._id)} className="text-red-500 p-2 hover:bg-red-500/20 rounded-lg shrink-0"><Trash2 size={18} /></button>
+                    <div className="flex gap-2">
+                      <button onClick={() => handleEditProject(p)} className="text-cyber-primary p-2 hover:bg-cyber-primary/20 rounded-lg"><Edit size={18} /></button>
+                      <button onClick={() => handleDeleteProject(p._id)} className="text-red-500 p-2 hover:bg-red-500/20 rounded-lg"><Trash2 size={18} /></button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -295,9 +390,12 @@ const Admin = () => {
           {/* ABOUT TAB */}
           {activeTab === 'about' && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-8">
-              <h3 className="text-2xl font-bold text-white border-b border-white/10 pb-4">About Section Image</h3>
+              <div className="border-b border-white/10 pb-4">
+                <h3 className="text-2xl font-bold text-white">Profile Photo</h3>
+                <p className="text-white/40 text-sm mt-1">Update the main photo used in your "About Me" section.</p>
+              </div>
               <div className="space-y-4">
-                <label className="text-white/60 text-sm">Profile/About Image URL</label>
+                <label className="text-white/60 text-sm">Upload your photo or paste an image link</label>
                 <div className="flex gap-4">
                   <input type="url" value={aboutImage} onChange={e => setAboutImage(e.target.value)} placeholder="https://..." className="flex-1 bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-white" />
                   
@@ -321,19 +419,32 @@ const Admin = () => {
           {/* SKILLS TAB */}
           {activeTab === 'skills' && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-8">
-              <h3 className="text-2xl font-bold text-white border-b border-white/10 pb-4">Manage Skills</h3>
-              <form onSubmit={handleAddSkill} className="flex flex-col sm:flex-row gap-4">
+              <div className="border-b border-white/10 pb-4">
+                <h3 className="text-2xl font-bold text-white">My Expertise</h3>
+                <p className="text-white/40 text-sm mt-1">List the technologies and tools you are proficient in.</p>
+              </div>
+              <form onSubmit={handleAddSkill} className="flex flex-col sm:flex-row gap-4 bg-black/30 p-6 rounded-2xl border border-white/5">
                 <input type="text" required placeholder="Skill Name (e.g. React.js)" value={newSkill.name} onChange={e => setNewSkill({...newSkill, name: e.target.value})} className="flex-1 bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-white" />
                 <select value={newSkill.icon} onChange={e => setNewSkill({...newSkill, icon: e.target.value})} className="bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-white">
                   {availableIcons.map(icon => <option key={icon} value={icon}>{icon}</option>)}
                 </select>
-                <button type="submit" className="px-6 py-2 bg-cyber-primary text-black font-bold rounded-lg">Add Skill</button>
+                <button type="submit" className="px-6 py-2 bg-cyber-primary text-black font-bold rounded-lg">
+                  {editingSkillId ? 'Update Skill' : 'Add Skill'}
+                </button>
+                {editingSkillId && (
+                  <button type="button" onClick={() => { setEditingSkillId(null); setNewSkill({ name: '', icon: 'Code' }); }} className="px-6 py-2 bg-white/10 text-white font-bold rounded-lg hover:bg-white/20">
+                    Cancel
+                  </button>
+                )}
               </form>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {skills.map(s => (
                   <div key={s._id} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
                     <span className="text-white">{s.name}</span>
-                    <button onClick={() => handleDeleteSkill(s._id)} className="text-red-500 p-1 hover:bg-red-500/20 rounded-lg"><Trash2 size={16} /></button>
+                    <div className="flex gap-2">
+                      <button onClick={() => handleEditSkill(s)} className="text-cyber-primary p-1 hover:bg-cyber-primary/20 rounded-lg"><Edit size={16} /></button>
+                      <button onClick={() => handleDeleteSkill(s._id)} className="text-red-500 p-1 hover:bg-red-500/20 rounded-lg"><Trash2 size={16} /></button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -343,7 +454,10 @@ const Admin = () => {
           {/* PRICING TAB */}
           {activeTab === 'pricing' && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-8">
-              <h3 className="text-2xl font-bold text-white border-b border-white/10 pb-4">Manage Pricing Plans</h3>
+              <div className="border-b border-white/10 pb-4">
+                <h3 className="text-2xl font-bold text-white">Service Plans</h3>
+                <p className="text-white/40 text-sm mt-1">Manage the different pricing tiers and services you offer.</p>
+              </div>
               <form onSubmit={handleAddPricing} className="space-y-4 bg-black/30 p-6 rounded-2xl border border-white/5">
                 <div className="grid md:grid-cols-3 gap-4">
                   <input type="text" required placeholder="Plan Title" value={newPricing.title} onChange={e => setNewPricing({...newPricing, title: e.target.value})} className="bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-white" />
@@ -395,7 +509,10 @@ const Admin = () => {
           {/* MESSAGES TAB */}
           {activeTab === 'messages' && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-8">
-              <h3 className="text-2xl font-bold text-white border-b border-white/10 pb-4">Client Messages</h3>
+              <div className="border-b border-white/10 pb-4">
+                <h3 className="text-2xl font-bold text-white">Client Enquiries</h3>
+                <p className="text-white/40 text-sm mt-1">Read and manage messages sent by potential clients from your website.</p>
+              </div>
               <div className="space-y-4">
                 {messages.length === 0 ? (
                   <p className="text-white/40">No messages yet.</p>

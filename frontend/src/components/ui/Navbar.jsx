@@ -40,9 +40,12 @@ const Navbar = () => {
       >
         {/* Logo */}
         <Link to="/" className="flex items-center gap-3 relative z-[110] cursor-pointer">
-          <div className="text-xl md:text-2xl font-black tracking-tighter">
-            <span className="text-cyber-primary">KATHIRESAN</span>
-            <span className="text-white">.</span>
+          <div className="flex items-center gap-2">
+            <img src="/logo1.png" alt="Logo" className="w-8 h-8 md:w-10 md:h-10 object-contain" />
+            <div className="text-xl md:text-2xl font-black tracking-tighter">
+              <span className="text-cyber-primary">KATHIRESAN</span>
+              <span className="text-white">.</span>
+            </div>
           </div>
           <div className="hidden md:block h-5 w-[1px] bg-white/20" />
           <p className="hidden md:block text-[10px] font-mono tracking-[0.2em] text-white/40 uppercase">Dev</p>

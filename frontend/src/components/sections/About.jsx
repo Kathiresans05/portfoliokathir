@@ -18,10 +18,12 @@ const About = () => {
   const [aboutImage, setAboutImage] = useState('https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop');
 
   useEffect(() => {
-    const savedImg = localStorage.getItem('portfolio_about_img');
-    if (savedImg) {
-      setAboutImage(savedImg);
-    }
+    fetch('http://localhost:5000/api/settings/portfolio_about_img')
+      .then(res => res.json())
+      .then(data => {
+        if (data.value) setAboutImage(data.value);
+      })
+      .catch(err => console.error(err));
   }, []);
 
   return (
@@ -38,9 +40,9 @@ const About = () => {
             className="space-y-8"
           >
             <div className="space-y-2">
-              <h3 className="text-cyber-secondary font-mono tracking-tighter uppercase">01 // IDENTITY</h3>
+              <h3 className="text-cyber-secondary font-mono tracking-tighter uppercase">01 // ABOUT ME</h3>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white">
-                Crafting Digital <br /><span className="text-cyber-primary">Masterpieces</span>
+                Building Modern & <br /><span className="text-cyber-primary">Powerful Websites</span>
               </h2>
             </div>
             
