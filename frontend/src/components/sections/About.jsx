@@ -16,12 +16,27 @@ const StatCard = ({ label, value, delay }) => (
 
 const About = () => {
   const [aboutImage, setAboutImage] = useState('https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop');
+  const [stats, setStats] = useState({
+    years: '4+',
+    projects: '50+',
+    clients: '30+',
+    coffee: '1.2k'
+  });
 
   useEffect(() => {
+    // Fetch About Image
     fetch('http://localhost:5000/api/settings/portfolio_about_img')
       .then(res => res.json())
       .then(data => {
         if (data.value) setAboutImage(data.value);
+      })
+      .catch(err => console.error(err));
+
+    // Fetch Stats
+    fetch('http://localhost:5000/api/settings/portfolio_stats')
+      .then(res => res.json())
+      .then(data => {
+        if (data.value) setStats(JSON.parse(data.value));
       })
       .catch(err => console.error(err));
   }, []);
@@ -57,10 +72,10 @@ const About = () => {
             </p>
 
             <div className="grid grid-cols-2 gap-4">
-              <StatCard label="Years Experience" value="4+" delay={0.2} />
-              <StatCard label="Projects Completed" value="50+" delay={0.4} />
-              <StatCard label="Happy Clients" value="30+" delay={0.6} />
-              <StatCard label="Cups of Coffee" value="1.2k" delay={0.8} />
+              <StatCard label="Years Experience" value={stats.years} delay={0.2} />
+              <StatCard label="Projects Completed" value={stats.projects} delay={0.4} />
+              <StatCard label="Happy Clients" value={stats.clients} delay={0.6} />
+              <StatCard label="Cups of Coffee" value={stats.coffee} delay={0.8} />
             </div>
           </motion.div>
 

@@ -7,7 +7,7 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
-  const navItems = ['Home', 'About', 'Skills', 'Gallery', 'Projects', 'Pricing', 'Contact'];
+  const navItems = ['Home', 'About', 'Skills', 'Gallery', 'Projects', 'Pricing'];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -44,15 +44,12 @@ const Navbar = () => {
             <img src="/logo1.png" alt="Logo" className="w-8 h-8 md:w-10 md:h-10 object-contain" />
             <div className="text-xl md:text-2xl font-black tracking-tighter">
               <span className="text-cyber-primary">KATHIRESAN</span>
-              <span className="text-white">.</span>
             </div>
           </div>
-          <div className="hidden md:block h-5 w-[1px] bg-white/20" />
-          <p className="hidden md:block text-[10px] font-mono tracking-[0.2em] text-white/40 uppercase">Dev</p>
         </Link>
 
-        {/* Desktop Nav Links */}
-        <div className="hidden lg:flex gap-10 items-center">
+        {/* Desktop Nav Links - Centered */}
+        <div className="hidden lg:flex flex-1 justify-center items-center gap-12">
           {navItems.map((item, i) => {
             const path = item === 'Home' ? '/' : `/${item.toLowerCase()}`;
             const isActive = location.pathname === path;
@@ -95,6 +92,7 @@ const Navbar = () => {
               HIRE ME ⚡
             </Link>
           </motion.div>
+
 
           {/* Mobile Menu Toggle */}
           <button 
@@ -140,19 +138,20 @@ const Navbar = () => {
                   </motion.div>
                 );
               })}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 + (navItems.length * 0.1) }}
-              >
-                <Link
-                  to="/contact"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="inline-block mt-8 px-12 py-4 bg-cyber-primary text-black font-black tracking-[0.2em] uppercase rounded-full"
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 + (navItems.length * 0.1) }}
                 >
-                  HIRE ME ⚡
-                </Link>
-              </motion.div>
+                  <Link
+                    to="/contact"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="inline-block mt-8 px-12 py-4 bg-cyber-primary text-black font-black tracking-[0.2em] uppercase rounded-full"
+                  >
+                    HIRE ME ⚡
+                  </Link>
+                </motion.div>
+
             </div>
           </motion.div>
         )}

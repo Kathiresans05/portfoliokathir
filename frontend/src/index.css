@@ -20,7 +20,10 @@
   cursor: none;
 }
 
-html,
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   overflow-x: hidden;
   background-color: var(--bg-dark);

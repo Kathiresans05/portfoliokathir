@@ -15,6 +15,12 @@ const Admin = () => {
   const [pricing, setPricing] = useState([]);
   const [skills, setSkills] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [stats, setStats] = useState({
+    years: '4+',
+    projects: '50+',
+    clients: '30+',
+    coffee: '1.2k'
+  });
 
   // Form States
   const [newProject, setNewProject] = useState({ title: '', description: '', thumbnail: '', videoUrl: '', githubUrl: '', liveUrl: '' });
@@ -55,10 +61,21 @@ const Admin = () => {
       setPricing(priceData);
       setMessages(msgData);
       
-      // Fetch About Image from DB
-      const settingRes = await fetch(`${API_BASE}/settings/portfolio_about_img`);
-      const settingData = await settingRes.json();
-      setAboutImage(settingData.value || '');
+      // Fetch Settings
+      const [settingAboutRes, settingStatsRes] = await Promise.all([
+        fetch(`${API_BASE}/settings/portfolio_about_img`),
+        fetch(`${API_BASE}/settings/portfolio_stats`)
+      ]);
+      
+      const [settingAboutData, settingStatsData] = await Promise.all([
+        settingAboutRes.json(),
+        settingStatsRes.json()
+      ]);
+
+      setAboutImage(settingAboutData.value || '');
+      if (settingStatsData.value) {
+        setStats(JSON.parse(settingStatsData.value));
+      }
     } catch (err) {
       console.error("Error fetching data:", err);
     }
@@ -71,7 +88,21 @@ const Admin = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ key: 'portfolio_about_img', value: aboutImage })
       });
-      alert('About image saved to database!');
+      alert('About image saved!');
+    } catch (err) {
+      console.error(err);
+      alert('Save failed');
+    }
+  };
+
+  const handleSaveStats = async () => {
+    try {
+      await fetch(`${API_BASE}/settings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: 'portfolio_stats', value: JSON.stringify(stats) })
+      });
+      alert('Stats updated successfully!');
     } catch (err) {
       console.error(err);
       alert('Save failed');
@@ -282,7 +313,8 @@ const Admin = () => {
     { id: 'projects', icon: FolderOpen, label: 'My Portfolio' },
     { id: 'about', icon: Image, label: 'Profile Photo' },
     { id: 'skills', icon: Code, label: 'My Skills' },
-    { id: 'pricing', icon: DollarSign, label: 'Service Plans' },
+    {id: 'pricing', icon: DollarSign, label: 'Service Plans' },
+    { id: 'stats', icon: Settings, label: 'My Stats' },
     { id: 'messages', icon: MessageSquare, label: 'Client Messages' },
   ];
 
@@ -502,6 +534,44 @@ const Admin = () => {
                     </div>
                   </div>
                 ))}
+              </div>
+            </motion.div>
+          )}
+
+          {/* STATS TAB */}
+          {activeTab === 'stats' && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-8">
+              <div className="border-b border-white/10 pb-4">
+                <h3 className="text-2xl font-bold text-white">Experience Stats</h3>
+                <p className="text-white/40 text-sm mt-1">Manage the numbers shown in your Experience/About section.</p>
+              </div>
+              
+              <div className="grid md:grid-cols-2 gap-6 bg-black/30 p-8 rounded-2xl border border-white/5">
+                <div className="space-y-2">
+                  <label className="text-white/60 text-xs font-mono uppercase tracking-widest">Years of Experience</label>
+                  <input type="text" value={stats.years} onChange={e => setStats({...stats, years: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-cyber-primary font-bold text-xl" />
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-white/60 text-xs font-mono uppercase tracking-widest">Projects Completed</label>
+                  <input type="text" value={stats.projects} onChange={e => setStats({...stats, projects: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-cyber-primary font-bold text-xl" />
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-white/60 text-xs font-mono uppercase tracking-widest">Happy Clients</label>
+                  <input type="text" value={stats.clients} onChange={e => setStats({...stats, clients: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-cyber-primary font-bold text-xl" />
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-white/60 text-xs font-mono uppercase tracking-widest">Cups of Coffee</label>
+                  <input type="text" value={stats.coffee} onChange={e => setStats({...stats, coffee: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-cyber-primary font-bold text-xl" />
+                </div>
+
+                <div className="col-span-full pt-4">
+                  <button onClick={handleSaveStats} className="w-full md:w-auto px-10 py-3 bg-cyber-primary text-black font-black uppercase tracking-widest rounded-xl hover:shadow-[0_0_20px_rgba(0,243,255,0.4)] transition-all flex items-center justify-center gap-2">
+                    <Save size={20} /> Update All Stats
+                  </button>
+                </div>
               </div>
             </motion.div>
           )}
