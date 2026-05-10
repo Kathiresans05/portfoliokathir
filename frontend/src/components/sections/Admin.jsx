@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Settings, Image, Code, FolderOpen, DollarSign, MessageSquare, Trash2, Plus, Save, Video, UploadCloud, Loader, Edit } from 'lucide-react';
-
-const API_BASE = 'http://localhost:5000/api';
+import API_BASE from '../../api';
 
 const availableIcons = ['Code', 'Database', 'Globe', 'Terminal', 'Smartphone', 'Flame', 'Layers', 'Paintbrush', 'Server', 'Cpu', 'Layout', 'Box', 'Cloud', 'Monitor', 'Settings'];
 

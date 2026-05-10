@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import API_BASE from '../../api';
 import { motion } from 'framer-motion';
 import { Database, Code, Globe, Terminal, Smartphone, Flame, Layers, Paintbrush, Server, Cpu, Layout, Box, Cloud, Monitor, Settings } from 'lucide-react';
 
@@ -33,7 +34,7 @@ const Skills = () => {
   const [skills, setSkills] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/skills')
+    fetch(`${API_BASE}/skills`)
       .then(res => res.json())
       .then(data => setSkills(data))
       .catch(err => console.error(err));

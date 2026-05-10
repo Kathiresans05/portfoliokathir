@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import API_BASE from '../../api';
 import { motion } from 'framer-motion';
 import { Check, Shield, Zap, Crown } from 'lucide-react';
 
@@ -67,7 +68,7 @@ const Pricing = () => {
   const [plans, setPlans] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/pricing')
+    fetch(`${API_BASE}/pricing`)
       .then(res => res.json())
       .then(data => setPlans(data))
       .catch(err => console.error(err));

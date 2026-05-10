@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import API_BASE from '../../api';
 import { motion } from 'framer-motion';
 import { Send, Mail, MapPin, CheckCircle } from 'lucide-react';
 
@@ -17,7 +18,7 @@ const Contact = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/messages', {
+      const response = await fetch(`${API_BASE}/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

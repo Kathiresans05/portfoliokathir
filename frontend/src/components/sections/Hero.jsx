@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import API_BASE from '../api';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
@@ -14,7 +15,7 @@ const Hero = () => {
   const [aboutImage, setAboutImage] = useState('https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop');
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/settings/portfolio_about_img')
+    fetch(`${API_BASE}/settings/portfolio_about_img`)
       .then(res => res.json())
       .then(data => {
         if (data.value) setAboutImage(data.value);

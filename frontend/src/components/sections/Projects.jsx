@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import API_BASE from '../../api';
 import { motion } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
 
@@ -80,7 +81,7 @@ const Projects = () => {
   const [projects, setProjects] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/projects')
+    fetch(`${API_BASE}/projects`)
       .then(res => res.json())
       .then(data => setProjects(data))
       .catch(err => console.error(err));

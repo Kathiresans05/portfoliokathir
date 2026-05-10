@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import API_BASE from '../../api';
 import { motion } from 'framer-motion';
 
 const StatCard = ({ label, value, delay }) => (
@@ -25,7 +26,7 @@ const About = () => {
 
   useEffect(() => {
     // Fetch About Image
-    fetch('http://localhost:5000/api/settings/portfolio_about_img')
+    fetch(`${API_BASE}/settings/portfolio_about_img`)
       .then(res => res.json())
       .then(data => {
         if (data.value) setAboutImage(data.value);
@@ -33,7 +34,7 @@ const About = () => {
       .catch(err => console.error(err));
 
     // Fetch Stats
-    fetch('http://localhost:5000/api/settings/portfolio_stats')
+    fetch(`${API_BASE}/settings/portfolio_stats`)
       .then(res => res.json())
       .then(data => {
         if (data.value) setStats(JSON.parse(data.value));
