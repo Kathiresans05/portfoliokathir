@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cyber-blue: #00f3ff;
+  --cyber-pink: #ff00ff;
+  --cyber-purple: #7000ff;
+  --bg-dark: #020205;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  cursor: none;
+}
+
+html,
+body {
+  overflow-x: hidden;
+  background-color: var(--bg-dark);
+  color: #fff;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+code, pre {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.glass-morphism {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.neon-border {
+  border: 1px solid var(--cyber-blue);
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.3), inset 0 0 15px rgba(0, 243, 255, 0.1);
+}
+
+.neon-text {
+  text-shadow: 0 0 10px var(--cyber-blue), 0 0 30px var(--cyber-blue);
+}
+
+.neon-text-pink {
+  text-shadow: 0 0 10px var(--cyber-pink), 0 0 30px var(--cyber-pink);
+}
+
+.canvas-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Minimal thin scrollbar */
+::-webkit-scrollbar {
+  width: 3px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 243, 255, 0.3);
+  border-radius: 10px;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.section-padding {
+  padding: 40px 10%;
+}
+
+@media (max-width: 768px) {
+  .section-padding {
+    padding: 30px 5%;
+  }
+}
