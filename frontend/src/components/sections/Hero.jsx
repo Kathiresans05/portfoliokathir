@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import API_BASE from '../api';
+import API_BASE from '../../api';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
