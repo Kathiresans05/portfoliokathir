@@ -53,7 +53,7 @@ const About = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1 }}
-            className="space-y-8"
+            className="space-y-8 order-2 md:order-1"
           >
             <div className="space-y-2">
               <h3 className="text-cyber-secondary font-mono tracking-tighter uppercase">01 // ABOUT ME</h3>
@@ -81,18 +81,18 @@ const About = () => {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.8, rotateY: 30 }}
-            whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 1.2 }}
-            className="relative group order-first md:order-last"
+            className="relative group order-1 md:order-2 mb-8 md:mb-0"
           >
             <div className="absolute inset-0 bg-cyber-primary/20 blur-3xl rounded-full group-hover:bg-cyber-primary/40 transition-all duration-700" />
             <div className="relative glass-morphism aspect-square rounded-3xl overflow-hidden border-cyber-border">
               <img 
                 src={aboutImage}
                 alt="Kathiresan - Profile" 
-                className="w-full h-full object-cover filter brightness-75 group-hover:brightness-100 transition-all duration-500"
+                className="w-full h-full object-cover filter brightness-90 group-hover:brightness-100 transition-all duration-500"
               /> <div className="absolute inset-0 bg-gradient-to-t from-cyber-bg via-transparent to-transparent opacity-60" />
                
                {/* Floating HUD elements */}
