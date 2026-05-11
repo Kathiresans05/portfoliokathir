@@ -42,7 +42,7 @@ const ProjectCard = ({ title, category = 'PROJECT', description, thumbnail, gith
         <img 
           src={thumbnail || "/project1.png"} 
           alt={title}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-40 group-hover:opacity-60"
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-60 group-hover:opacity-100 brightness-90 group-hover:brightness-100"
         />
         <div className="absolute inset-0 flex items-center justify-center p-6 md:p-12">
           <motion.div 
@@ -105,7 +105,7 @@ const Projects = () => {
         {projects.length === 0 ? (
           <div className="text-white/40 text-center py-20">No projects added yet. Add them in the Admin Dashboard.</div>
         ) : (
-          <div className="grid grid-cols-2 gap-3 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
             {projects.map((project, index) => (
               <ProjectCard key={project._id || index} {...project} index={index} />
             ))}
