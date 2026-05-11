@@ -85,7 +85,7 @@ const About = () => {
             whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1.2 }}
-            className="relative group hidden md:block"
+            className="relative group order-first md:order-last"
           >
             <div className="absolute inset-0 bg-cyber-primary/20 blur-3xl rounded-full group-hover:bg-cyber-primary/40 transition-all duration-700" />
             <div className="relative glass-morphism aspect-square rounded-3xl overflow-hidden border-cyber-border">
